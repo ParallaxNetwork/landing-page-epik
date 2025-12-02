@@ -1,0 +1,247 @@
+'use client'
+
+import React, { useRef } from 'react'
+import Image from 'next/image'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { Globe, Instagram, Github, Linkedin, Twitter, ExternalLink } from 'lucide-react'
+import { Solway, Courier_Prime } from 'next/font/google'
+
+const solway = Solway({ subsets: ['latin'], weight: ['400', '700'] })
+const courier = Courier_Prime({ subsets: ['latin'], weight: ['400'] })
+
+const lexicalToText = (content: any): string => {
+  if (!content) return ''
+  if (typeof content === 'string') return content
+
+  try {
+    const parsed = typeof content === 'string' ? JSON.parse(content) : content
+    if (parsed.root?.children) {
+      return parsed.root.children
+        .map((node: any) => {
+          if (node.children) {
+            return node.children.map((child: any) => child.text || '').join('')
+          }
+          return node.text || ''
+        })
+        .join('\n')
+    }
+  } catch (e) {
+    console.error('Error parsing content:', e)
+  }
+  return ''
+}
+
+interface Work {
+  id: string
+  title: string
+  subtitle?: string
+  short_desc?: string
+  long_desc?: any
+  slug?: string
+  status: string
+  media?: {
+    id: string
+    url: string
+    alt: string
+  } | null
+  social_links?: Array<{
+    type: string
+    icon?: string | null
+    url: string
+  }>
+  tags?: Array<{
+    id: string
+    name: string
+  }>
+}
+
+interface WorksSectionProps {
+  works: Work[]
+}
+
+function WorkItemImage({ work }: { work: Work }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  })
+
+  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.7, 1, 0.7])
+  const imageOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.6, 1, 0.6])
+
+  const isVideo = (url: string) => url?.match(/\.(mp4|webm|ogg)$/i)
+
+  return (
+    <motion.div
+      ref={containerRef}
+      className="w-full"
+      style={{ scale: imageScale, opacity: imageOpacity }}
+    >
+      <div className="bg-gray-800 rounded-2xl overflow-hidden w-[672px] h-[378px] flex items-center justify-center relative mx-auto">
+        {work.media?.url ? (
+          <div className="w-full h-full relative">
+            {isVideo(work.media.url) ? (
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover"
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                autoPlay
+              >
+                <source src={work.media.url} type="video/mp4" />
+              </video>
+            ) : (
+              <Image
+                src={work.media.url}
+                alt={work.media.alt || work.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            )}
+          </div>
+        ) : (
+          <div className={`${courier.className} text-gray-500 text-center p-4`}>
+            <p className="text-lg mb-2">⚠️ No media available</p>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+export default function WorksSection({ works }: WorksSectionProps) {
+  const headerRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [activeWorkIndex, setActiveWorkIndex] = React.useState(0)
+
+  const { scrollYProgress: headerProgress } = useScroll({
+    target: headerRef,
+    offset: ['start end', 'end start'],
+  })
+
+  const headerOpacity = useTransform(headerProgress, [0, 0.2, 0.5], [0, 1, 1])
+  const headerY = useTransform(headerProgress, [0, 0.2], [40, 0])
+
+  const { scrollYProgress: sectionProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start center', 'end center'],
+  })
+
+  React.useEffect(() => {
+    const unsubscribe = sectionProgress.on('change', (latest) => {
+      const featuredCount = Math.min(works.length, 3)
+      const index = Math.floor(latest * (featuredCount + 0.5))
+      const clampedIndex = Math.max(0, Math.min(index, featuredCount - 1))
+      setActiveWorkIndex(clampedIndex)
+    })
+    return () => unsubscribe()
+  }, [sectionProgress, works.length])
+
+  if (!works || works.length === 0) {
+    return (
+      <section className="w-full min-h-screen bg-black text-white flex items-center justify-center">
+        <div className={`${courier.className} text-gray-400 text-lg`}>No works available yet.</div>
+      </section>
+    )
+  }
+
+  const featuredWorks = works.slice(0, 3)
+  const activeWork = featuredWorks[activeWorkIndex]
+
+  const getSocialIcon = (type: string) => {
+    const icons = {
+      website: <Globe className="w-4 h-4" />,
+      instagram: <Instagram className="w-4 h-4" />,
+      github: <Github className="w-4 h-4" />,
+      linkedin: <Linkedin className="w-4 h-4" />,
+      twitter: <Twitter className="w-4 h-4" />,
+    }
+    return icons[type as keyof typeof icons] || <ExternalLink className="w-4 h-4" />
+  }
+
+  return (
+    <section ref={sectionRef} className="w-full min-h-[300vh] bg-black text-white relative">
+      <motion.div 
+        ref={headerRef} 
+        style={{ opacity: headerOpacity, y: headerY }}
+        className="pt-16 pb-8 text-center"
+      >
+        <h1 className={`${solway.className} text-4xl md:text-5xl font-bold`}>
+          Our Works
+        </h1>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 px-4 md:px-8 relative">
+        <div className="hidden md:block md:col-span-3">
+          <div className="sticky top-1/2 -translate-y-1/2 pr-4">
+            <motion.div
+              key={`left-${activeWorkIndex}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-2"
+            >
+              <h2 className={`${solway.className} text-2xl font-bold text-pink-500`}>
+                {activeWork.title}
+              </h2>
+
+              {activeWork.subtitle && (
+                <p className={`${courier.className} text-pink-400 text-sm`}>
+                  {activeWork.subtitle}
+                </p>
+              )}
+
+              {activeWork.social_links && activeWork.social_links.length > 0 && (
+                <div className="mt-2 flex flex-col gap-1">
+                  {activeWork.social_links.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${courier.className} flex items-center gap-2 text-xs text-white hover:text-pink-400 transition-colors`}
+                    >
+                      {getSocialIcon(link.type)}
+                      <span className="text-xs">
+                        {link.url.replace(/^https?:\/\//, '')}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </div>
+
+        <div className="col-span-12 md:col-span-6 flex flex-col gap-2 py-8">
+          {featuredWorks.map((work) => (
+            <WorkItemImage key={work.id} work={work} />
+          ))}
+        </div>
+
+        <div className="hidden md:block md:col-span-3">
+          <div className="sticky top-1/2 -translate-y-1/2 pl-4">
+            <motion.div
+              key={`right-${activeWorkIndex}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-2 max-w-[250px]"
+            >
+              {activeWork.short_desc && (
+                <p className={`${courier.className} text-gray-300 text-sm leading-relaxed line-clamp-6`}>
+                  {activeWork.short_desc}
+                </p>
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

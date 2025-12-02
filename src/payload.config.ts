@@ -1,35 +1,38 @@
-// storage-adapter-import-placeholder
+import { buildConfig } from 'payload'
+import path from 'path'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import path from 'path'
-import { buildConfig } from 'payload'
-import { fileURLToPath } from 'url'
-import sharp from 'sharp'
 
+// Collections
 import { Users } from './collections/Users'
+import { Works } from './collections/Works'
 import { Media } from './collections/Media'
+import { SocialLinks } from './collections/SocialLinks'
+import { Tags } from './collections/Tags'
 
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+// Globals
+import { Recognition } from './globals/Recognition'
 
 export default buildConfig({
-  admin: {
-    user: Users.slug,
-    importMap: {
-      baseDir: path.resolve(dirname),
-    },
-  },
-  collections: [Users, Media],
-  editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
-  typescript: {
-    outputFile: path.resolve(dirname, 'payload-types.ts'),
-  },
+  secret: process.env.PAYLOAD_SECRET!,
+
+  collections: [Users, Works, Media, SocialLinks, Tags],
+
+  // ✅ Tambahkan globals di sini
+  globals: [Recognition],
+
+  cors: ['http://localhost:3000'],
+  csrf: ['http://localhost:3000'],
+
   db: mongooseAdapter({
-    url: process.env.DATABASE_URI || '',
+    url: process.env.DATABASE_URI!,
   }),
-  sharp,
-  plugins: [
-    // storage-adapter-placeholder
-  ],
+
+  editor: lexicalEditor({}),
+
+  typescript: {
+    outputFile: path.resolve(__dirname, 'payload-types.ts'),
+  },
+
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
 })

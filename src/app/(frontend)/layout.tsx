@@ -1,17 +1,25 @@
 import React from 'react'
-import './styles.css'
+import { Solway } from 'next/font/google'
+import Navbar from '@/components/Header'
+import './globals.css' // Import dari folder yang sama dengan layout ini
+
+const solway = Solway({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+})
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  title: 'Epik',
+  description: 'Creative branding agency portfolio website',
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
+export default async function FrontendLayout(props: { children: React.ReactNode }) {
   const { children } = props
 
   return (
     <html lang="en">
-      <body>
+      <body className={`${solway.className} bg-black text-white`}>
+        <Navbar />
         <main>{children}</main>
       </body>
     </html>
