@@ -1,42 +1,54 @@
 // collections/SocialLinks.ts
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from "payload";
 
 export const SocialLinks: CollectionConfig = {
-  slug: 'social_links',
+  slug: "social_links",
   admin: {
-    useAsTitle: 'type',
-    defaultColumns: ['type', 'url'],
+    useAsTitle: "label", // ✅ Gunakan label sebagai title
+    defaultColumns: ["label", "type", "url"],
   },
   access: {
     read: () => true,
   },
   fields: [
-    // ❌ HAPUS field work
     {
-      name: 'type',
-      type: 'select',
+      name: "label",
+      type: "text",
+      required: true,
+      admin: {
+        description:
+          'Nama untuk identifikasi link ini (contoh: "TikTok Project A", "Instagram Personal")',
+        placeholder: "Contoh: TikTok Parallax Network",
+      },
+    },
+    {
+      name: "type",
+      type: "select",
       required: true,
       options: [
-        { label: 'Website', value: 'website' },
-        { label: 'Instagram', value: 'instagram' },
-        { label: 'TikTok', value: 'tiktok' },
-        { label: 'GitHub', value: 'github' },
-        { label: 'LinkedIn', value: 'linkedin' },
-        { label: 'Twitter', value: 'twitter' },
-        { label: 'Other', value: 'other' },
+        { label: "Website", value: "website" },
+        { label: "Instagram", value: "instagram" },
+        { label: "TikTok", value: "tiktok" },
+        { label: "GitHub", value: "github" },
+        { label: "LinkedIn", value: "linkedin" },
+        { label: "Twitter", value: "twitter" },
+        { label: "Other", value: "other" },
       ],
     },
     {
-      name: 'url',
-      type: 'text',
+      name: "url",
+      type: "text",
       required: true,
+      admin: {
+        placeholder: "https://...",
+      },
     },
     {
-      name: 'icon',
-      type: 'text',
+      name: "icon",
+      type: "text",
       admin: {
-        description: 'Icon name or URL',
+        description: "Icon name or URL (optional)",
       },
     },
   ],
-}
+};

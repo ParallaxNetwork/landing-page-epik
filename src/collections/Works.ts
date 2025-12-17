@@ -1,79 +1,105 @@
 // collections/Works.ts
-import { CollectionConfig } from 'payload'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { CollectionConfig } from "payload";
+import { lexicalEditor } from "@payloadcms/richtext-lexical";
+
+// Fungsi untuk generate slug dari title
+const formatSlug = (val: string): string => {
+  return val
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
+};
 
 export const Works: CollectionConfig = {
-  slug: 'works',
+  slug: "works",
   admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'subtitle', 'status', 'createdAt'],
+    useAsTitle: "title",
+    defaultColumns: ["title", "slug", "status", "createdAt"],
   },
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'user',
-      type: 'relationship',
-      relationTo: 'users',
+      name: "user",
+      type: "relationship",
+      relationTo: "users",
       required: true,
       hasMany: false,
     },
     {
-      name: 'title',
-      type: 'text',
+      name: "title",
+      type: "text",
       required: true,
       maxLength: 32,
     },
     {
-      name: 'subtitle',
-      type: 'text',
-      maxLength: 80,
-    },
-    {
-      name: 'content',
-      type: 'richText',
+      name: "slug",
+      type: "text",
       required: true,
-      editor: lexicalEditor({}),
+      unique: true,
+      index: true,
+      admin: {
+        position: "sidebar",
+        description: "URL-friendly version of the title",
+      },
+      hooks: {
+        beforeValidate: [
+          ({ data, operation, value }) => {
+            if (operation === "create" || !value) {
+              if (data?.title) {
+                return formatSlug(data.title);
+              }
+            }
+            return value;
+          },
+        ],
+      },
     },
     {
-      name: 'short_desc',
-      type: 'textarea',
+      name: "short_desc",
+      type: "textarea",
       maxLength: 300,
+      required: true,
     },
     {
-      name: 'long_desc',
-      type: 'richText',
+      name: "long_desc",
+      type: "richText",
       editor: lexicalEditor({}),
     },
     {
-      name: 'media',
-      type: 'upload',
-      relationTo: 'media',
+      name: "media",
+      type: "upload",
+      relationTo: "media",
+      required: false,
+      admin: {
+        description: "Upload a new image or select from existing media",
+      },
+      // Ini akan otomatis menampilkan opsi:
+      // 1. "Upload New" - untuk upload gambar baru
+      // 2. "Select" - untuk pilih dari media yang sudah ada
+      // 3. "Remove" - untuk hapus pilihan
     },
     {
-      name: 'social_links',
-      type: 'relationship',
-      relationTo: 'social_links',
+      name: "social_links",
+      type: "relationship",
+      relationTo: "social_links",
       hasMany: true,
+      admin: {
+        description: "Add links to GitHub, LinkedIn, etc.",
+      },
     },
     {
-      name: 'tags',
-      type: 'relationship',
-      relationTo: 'tags',
-      hasMany: true,
-    },
-    {
-      name: 'status',
-      type: 'select',
+      name: "status",
+      type: "select",
       required: true,
-      defaultValue: 'draft',
+      defaultValue: "draft",
       options: [
-        { label: 'Draft', value: 'draft' },
-        { label: 'Published', value: 'published' },
-        { label: 'Archived', value: 'archived' },
+        { label: "Draft", value: "draft" },
+        { label: "Published", value: "published" },
+        { label: "Archived", value: "archived" },
       ],
     },
   ],
   timestamps: true,
-}
+};

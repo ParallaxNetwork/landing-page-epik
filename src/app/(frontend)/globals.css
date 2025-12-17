@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap");
+@import "tailwindcss";
 
 :root {
   --background: #000000;
@@ -21,7 +21,7 @@ body {
   width: 100%;
   height: 700px;
   background-color: #000;
-  overflow: hidden;
+  overflow: visible; /* Ubah dari hidden ke visible agar rectangle tidak terpotong */
 }
 
 .hero-main-bg {
@@ -39,6 +39,7 @@ body {
 .rect {
   position: absolute;
   z-index: 1;
+  transition: all 0.3s ease;
 }
 
 .rectangle1 {
@@ -67,6 +68,8 @@ body {
   right: 0;
   width: 240px;
   height: 120px;
+  opacity: 1;
+  z-index: 1;
 }
 
 .hero-content {
@@ -78,7 +81,7 @@ body {
   align-items: center;
   text-align: center;
   height: 100%;
-  padding: 0 20px;
+  padding: 80px 20px 40px 20px; /* Extra padding top untuk header */
 }
 
 .hero-title {
@@ -291,7 +294,7 @@ body {
 }
 
 .description {
-  font-family: 'Courier Prime', monospace;
+  font-family: "Courier Prime", monospace;
   font-size: 12.5px;
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -305,4 +308,389 @@ body {
 
 .description:last-child {
   margin-bottom: 0;
+}
+
+/* ============================================
+   RESPONSIVE - SEMUA KOMPONEN TETAP ADA
+   HANYA UKURAN YANG MENGECIL PROPORSIONAL
+   ============================================ */
+
+/* HEADER RESPONSIVE - Scale Transform (Simple) */
+@media (max-width: 1024px) {
+  header .max-w-\[1400px\] {
+    transform: scale(0.85);
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 768px) {
+  header .max-w-\[1400px\] {
+    transform: scale(0.7);
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header .max-w-\[1400px\] {
+    transform: scale(0.6);
+    transform-origin: center;
+  }
+}
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  /* Hero Section - Ukuran 70% */
+  .hero-section {
+    height: 490px; /* 70% dari 700px */
+  }
+
+  .hero-content {
+    padding: 60px 16px 30px 16px; /* Kurangi top padding di tablet */
+  }
+
+  .hero-title {
+    font-size: 2.1rem; /* 70% dari 3rem */
+  }
+
+  .hero-subtext {
+    font-size: 12px; /* 70% sekitar */
+  }
+
+  /* Rectangle tetap ada, ukuran 60% */
+  .rectangle1 {
+    top: 119px; /* 70% dari 170px */
+    left: 0;
+    width: 120px; /* 60% dari 200px */
+    height: 60px; /* 60% dari 100px */
+  }
+
+  .rectangle2 {
+    top: 280px; /* 70% dari 400px */
+    right: 25px; /* 70% dari 40px */
+    width: 120px;
+    height: 60px;
+  }
+
+  .rectangle3 {
+    top: 368px; /* 70% dari 525px */
+    left: 35px; /* 70% dari 60px */
+    width: 180px; /* 60% dari 300px */
+    height: 72px; /* 60% dari 120px */
+  }
+
+  .rectangle4 {
+    top: 70px; /* 70% dari 100px */
+    right: 0;
+    width: 144px; /* 60% dari 240px */
+    height: 72px; /* 60% dari 120px */
+    opacity: 1;
+    z-index: 2;
+  }
+
+  /* About Section - Tetap horizontal, ukuran 70% */
+  .about-section {
+    padding: 78px; /* 70% dari 111px */
+    gap: 42px; /* 70% dari 60px */
+  }
+
+  .about-title {
+    font-size: 67px; /* 70% dari 96px */
+    margin-bottom: 22px; /* 70% dari 32px */
+  }
+
+  .about-subtext,
+  .about-definition {
+    font-size: 12px; /* sekitar 85% dari 14px */
+  }
+
+  .about-image {
+    margin-left: -56px; /* 70% dari -80px */
+  }
+
+  .about-img {
+    width: 342px; /* 70% dari 489px */
+    height: 342px;
+  }
+
+  /* Recognition Section - Tetap horizontal, ukuran 75% */
+  .recognition-section {
+    padding: 48px 60px; /* 75% dari 64px 79px */
+  }
+
+  .recognition-wrapper {
+    width: 900px; /* 75% dari 1200px */
+    gap: 56px; /* 75% dari 75px */
+  }
+
+  .recognition-box {
+    width: 375px; /* 75% dari 500px */
+    padding: 30px 22px; /* 75% dari 40px 30px */
+  }
+
+  .recognition-divider {
+    width: 57px; /* 75% dari 76px */
+    height: 338px; /* 75% dari 450px */
+  }
+
+  .divider-img {
+    font-size: 18px; /* 75% dari 24px */
+  }
+
+  .corner {
+    width: 24px; /* 75% dari 32px */
+    height: 24px;
+  }
+
+  .title {
+    font-size: 20px; /* ~77% dari 26px */
+  }
+
+  .description {
+    font-size: 11px; /* ~88% dari 12.5px */
+  }
+}
+
+/* Mobile Large (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Hero Section - Ukuran 50% */
+  .hero-section {
+    height: 400px; /* Tinggi lebih besar untuk accommodate content */
+    overflow: visible; /* Pastikan rectangle tidak terpotong */
+  }
+
+  .hero-content {
+    padding: 100px 12px 25px 12px; /* Extra top padding untuk header + rectangle */
+  }
+
+  .hero-title {
+    font-size: 1.5rem; /* 50% dari 3rem */
+  }
+
+  .hero-subtext {
+    font-size: 10px;
+  }
+
+  .hero-icons {
+    transform: scale(0.8);
+  }
+
+  /* Rectangle tetap ada dengan posisi yang lebih aman */
+  .rectangle1 {
+    top: 130px; /* Lebih ke bawah agar tidak tertutup header */
+    left: 5px; /* Slight margin from edge */
+    width: 80px; /* 40% dari 200px */
+    height: 40px; /* 40% dari 100px */
+  }
+
+  .rectangle2 {
+    top: 240px;
+    right: 5px; /* Slight margin from edge */
+    width: 80px;
+    height: 40px;
+  }
+
+  .rectangle3 {
+    top: 300px;
+    left: 10px; /* Slight margin from edge */
+    width: 120px; /* 40% dari 300px */
+    height: 48px; /* 40% dari 120px */
+  }
+
+  .rectangle4 {
+    top: 100px; /* Lebih ke bawah untuk tidak tertutup header (96px + margin) */
+    right: 5px; /* Slight margin from edge - PENTING! */
+    width: 96px; /* 40% dari 240px */
+    height: 48px; /* 40% dari 120px */
+    opacity: 1; /* Pastikan terlihat */
+    z-index: 1;
+  }
+
+  /* About Section - Tetap horizontal tapi lebih compact */
+  .about-section {
+    padding: 40px 30px;
+    gap: 30px;
+    flex-direction: column;
+  }
+
+  .about-text {
+    text-align: center;
+  }
+
+  .about-title {
+    font-size: 48px; /* 50% dari 96px */
+    margin-bottom: 16px;
+  }
+
+  .about-subtext,
+  .about-definition {
+    font-size: 11px;
+  }
+
+  .about-image {
+    margin-left: 0;
+  }
+
+  .about-img {
+    width: 245px; /* 50% dari 489px */
+    height: 245px;
+  }
+
+  /* Recognition Section - Stack vertikal, ukuran 60% */
+  .recognition-section {
+    padding: 35px 25px;
+  }
+
+  .recognition-wrapper {
+    flex-direction: column;
+    width: 100%;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .recognition-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 25px 20px;
+  }
+
+  .recognition-divider {
+    width: 80%;
+    max-width: 300px;
+    height: 46px; /* 60% dari 76px */
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+  }
+
+  .divider-img {
+    writing-mode: horizontal-tb;
+    transform: rotate(0deg);
+    font-size: 14px; /* 60% dari 24px */
+  }
+
+  .corner {
+    width: 20px; /* 60% dari 32px */
+    height: 20px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .description {
+    font-size: 10px;
+  }
+}
+
+/* Mobile Small (max-width: 480px) */
+@media (max-width: 480px) {
+  /* Hero Section - Ukuran 40% */
+  .hero-section {
+    height: 350px; /* Tinggi cukup untuk content + rectangles */
+  }
+
+  .hero-content {
+    padding: 90px 8px 20px 8px; /* Extra top padding untuk header + rectangle */
+  }
+
+  .hero-title {
+    font-size: 1.2rem; /* 40% dari 3rem */
+  }
+
+  .hero-subtext {
+    font-size: 9px;
+  }
+
+  .hero-icons {
+    transform: scale(0.7);
+  }
+
+  /* Rectangle tetap ada dengan posisi yang safe */
+  .rectangle1 {
+    top: 110px; /* Adjusted agar tidak tertutup header */
+    left: 3px;
+    width: 60px; /* 30% dari 200px */
+    height: 30px; /* 30% dari 100px */
+  }
+
+  .rectangle2 {
+    top: 200px;
+    right: 3px;
+    width: 60px;
+    height: 30px;
+  }
+
+  .rectangle3 {
+    top: 250px;
+    left: 8px;
+    width: 90px; /* 30% dari 300px */
+    height: 36px; /* 30% dari 120px */
+  }
+
+  .rectangle4 {
+    top: 90px; /* Adjusted agar visible dan tidak tertutup header */
+    right: 3px; /* PENTING: Slight margin from edge */
+    width: 72px; /* 30% dari 240px */
+    height: 36px; /* 30% dari 120px */
+    opacity: 1;
+    z-index: 1;
+  }
+
+  /* About Section */
+  .about-section {
+    padding: 30px 20px;
+    gap: 25px;
+  }
+
+  .about-title {
+    font-size: 38px; /* 40% dari 96px */
+    margin-bottom: 13px;
+  }
+
+  .about-subtext,
+  .about-definition {
+    font-size: 10px;
+  }
+
+  .about-img {
+    width: 195px; /* 40% dari 489px */
+    height: 195px;
+  }
+
+  /* Recognition Section */
+  .recognition-section {
+    padding: 25px 16px;
+  }
+
+  .recognition-wrapper {
+    gap: 30px;
+  }
+
+  .recognition-box {
+    max-width: 100%;
+    padding: 20px 16px;
+  }
+
+  .recognition-divider {
+    width: 90%;
+    height: 38px; /* 50% dari 76px */
+  }
+
+  .divider-img {
+    font-size: 12px; /* 50% dari 24px */
+  }
+
+  .corner {
+    width: 16px; /* 50% dari 32px */
+    height: 16px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .description {
+    font-size: 9.5px;
+  }
 }

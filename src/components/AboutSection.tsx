@@ -1,31 +1,31 @@
-'use client'
+"use client";
 
-import React from 'react'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { Solway, Courier_Prime } from 'next/font/google'
+import React from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Solway, Courier_Prime } from "next/font/google";
 
-const solway = Solway({ subsets: ['latin'], weight: ['400', '700'] })
-const courier = Courier_Prime({ subsets: ['latin'], weight: ['400'] })
+const solway = Solway({ subsets: ["latin"], weight: ["400", "700"] });
+const courier = Courier_Prime({ subsets: ["latin"], weight: ["400"] });
 
 const TEXT_CONTENT = {
-  title: 'EPIK',
-  subtitle: '/ˈɛpɪk/ — (Noun) — Abbreviation of Enigma Paradox Inovasi Kreatif',
+  title: "EPIK",
+  subtitle: "/ˈɛpɪk/ — (Noun) — Abbreviation of Enigma Paradox Inovasi Kreatif",
   definitions: [
-    '1. A state of creative tension between code and culture;',
-    '2. A Web3 Dev Studio born from the paradox of innovation;',
-    '3. A collective of builders shaping order from digital chaos.',
+    "1. A state of creative tension between code and culture;",
+    "2. A Web3 Dev Studio born from the paradox of innovation;",
+    "3. A collective of builders shaping order from digital chaos.",
   ],
   extended: {
-    label: 'Definition (extended):',
-    text: 'EPIK builds interoperable products and protocols that empower the Web3 ecosystem. From Indonesia to the world, it explores the new internet through design, strategy, and imagination — where technology becomes expression and creation becomes connection.',
+    label: "Definition (extended):",
+    text: "EPIK builds interoperable products and protocols that empower the Web3 ecosystem. From Indonesia to the world, it explores the new internet through design, strategy, and imagination — where technology becomes expression and creation becomes connection.",
   },
-}
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 export default function AboutSection() {
   return (
@@ -49,14 +49,14 @@ export default function AboutSection() {
           variants={fadeInUp}
           transition={{ duration: 0.6 }}
         >
-          {TEXT_CONTENT.title.split('').map((char, i) => (
+          {TEXT_CONTENT.title.split("").map((char, i) => (
             <motion.span
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08, duration: 0.4 }}
               viewport={{ once: true }}
-              style={{ display: 'inline-block' }}
+              style={{ display: "inline-block" }}
             >
               {char}
             </motion.span>
@@ -67,6 +67,7 @@ export default function AboutSection() {
           className={`${courier.className} about-subtext`}
           variants={fadeInUp}
           transition={{ duration: 0.6 }}
+          style={{ color: "#FF00C3" }}
         >
           {TEXT_CONTENT.subtitle}
         </motion.p>
@@ -80,7 +81,10 @@ export default function AboutSection() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }}
               viewport={{ once: true }}
-              style={{ marginBottom: i === TEXT_CONTENT.definitions.length - 1 ? '24px' : '8px' }}
+              style={{
+                marginBottom:
+                  i === TEXT_CONTENT.definitions.length - 1 ? "24px" : "8px",
+              }}
             >
               {def}
             </motion.p>
@@ -111,7 +115,7 @@ export default function AboutSection() {
       >
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 30, ease: 'linear' }}
+          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
           whileHover={{ scale: 1.08 }}
         >
           <Image
@@ -124,5 +128,5 @@ export default function AboutSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }
